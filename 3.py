@@ -12,7 +12,7 @@ def bi_search_func(x, target):
         elif x_sorted[mid] > target:
             right = mid - 1
 
-        elif x_sorted[mid] <= target:
+        elif x_sorted[mid] < target:
             left = mid + 1
 
 
