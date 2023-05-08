@@ -1,18 +1,21 @@
 n = int(input())
 capacity_list = list(map(int, input().split()))
-capacity_list = [0] + capacity_list # 先頭に 0 を追加(引数は 0)
-# capacity_list.append(0) # 末尾に 0 を追加(引数は n+1)
-max_capacity_list = [[0 for _ in range(n)] for _ in range(n)]
+l_max_capacity_list = []
+r_max_capacity_list = []
 
-for i_l in range(2,n):
-    for i_r in range(i_l,n):
-        # print(i_l, i_r)
-        # print(f'left = {capacity_list[:i_l+1]}right = {capacity_list[:i_r-1:-1]}')
-        max_capacity_list[i_l][i_r] = max(max(capacity_list[:i_l]), max(capacity_list[:i_r:-1]))
+l_max_tmp = 0
+for i, i_cap in enumerate(capacity_list[:n-2]):
+    l_max_tmp = max(l_max_tmp, i_cap)
+    l_max_capacity_list.append(l_max_tmp)
 
-# print(max_capacity_list)
+r_max_tmp = 0
+for i, i_cap in enumerate(capacity_list[n-1:1:-1]):
+    r_max_tmp = max(r_max_tmp, i_cap)
+    r_max_capacity_list.append(r_max_tmp)
 
 d = int(input())
 for _ in range(d):
     l, r = map(int, input().split())
-    print(max_capacity_list[l][r])
+    l -= 2
+    r = (n-1) - r
+    print(max(l_max_capacity_list[l], r_max_capacity_list[r]))
