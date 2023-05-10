@@ -1,48 +1,19 @@
-def bi_search_func(x, target):
-    """
-    与えられた整数配列 x の中から整数 target 以下の整数のうち
-    最大のものの配列の引数を返します。
-
-    :param x:
-    :param target:
-    :return:
-    """
-    x_sorted = sorted(x)
-    left = 0
-    right = len(x) - 1
-    counter_min_index = 0
-
-    while left <= right:
-        mid = (left + right) // 2
-
-        if x_sorted[mid] > target:
-            # print('if')
-            # print(f'counter_min_index = {counter_min_index}')
-            # print(f'left = {left}')
-            # print(f'right = {right}')
-            right = mid - 1
-
-        elif x_sorted[mid] <= target:
-            counter_min_index = max(counter_min_index, mid)
-            # print('else')
-            # print(f'counter_min_index = {counter_min_index}')
-            # print(f'left = {left}')
-            # print(f'right = {right}')
-            left = mid + 1
-
-    print(counter_min_index)
-    print(x)
-    print(target, x[counter_min_index])
-    return counter_min_index
-
+# 入力を受け取る
 n, k = map(int, input().split())
-num_list = list(map(int, input().split()))
+a = list(map(int, input().split()))
 
-total_num_combi = 0
-for i, i_num in enumerate(num_list[:-1]):
-    k_counter = i_num + k
-    # print(f' >>> k = {k}, k_counter = {k_counter}')
-    total_num_combi += (bi_search_func(num_list[i+1:], k_counter) + 1)
-    # print('total_tmp', total_num_combi)
-print(total_num_combi)
+r_before = 1 # 最初は隣と差を考える。
+combi_total = 0 # 組み合わせの合計数の初期値
+for i_r in range(n):
+    for i_c in range(r_before,n):
 
+        if a[i_c] - a[i_r] > k:
+            r_before = i_c - 1
+            combi_total += r_before - i_r
+            break
+
+        elif i_c == n - 1:
+            r_before = i_c
+            combi_total += r_before - i_r
+
+print(combi_total)
