@@ -1,3 +1,5 @@
+import heapq
+
 n,m = map(int, input().split())
 graph = [set() for _ in range(n+1)]
 for _ in range(m):
@@ -5,24 +7,27 @@ for _ in range(m):
     graph[a].add((b, w))
     graph[b].add((a, w))
 
+visited = [False for i in range(n+1)]
 dist = [1.0e+10 for i in range(n+1)]
 dist[1] = 0
-v_visited = [1]
+Q = []
+heapq.heappush(Q, (dist[1], 1))
 
-while True:
-    min_dist = 1.0e+20
-    for i in v_visited:
-        for v, w in graph[i]:
-            if dist[v] > 1.0e+9:
-                dist_nex = dist[i] + w
-                if dist_nex < min_dist:
-                    min_dist = dist_nex
-                    min_v = v
-                    v_visited.append(min_v)
-    if min_dist > 1.0e+15:
-        break
+while Q:
+    cur = heapq.heappop(Q)[1]
+    
+    # 最短距離として取り出されて初めて探索済みとする
+    if not visited[cur]:
+        visited[cur] = True
+        
+        # 確定した頂点と隣接していて、かつ距離が小さくなるものを更新。
+        for v, w in graph[cur]:
+            if not visited[v] and dist[v] > dist[cur] + w:
+                dist[v] = dist[cur] + w
+                heapq.heappush(Q, (dist[v], v))
+
+for i, i_visited in enumerate(visited[1:], 1):
+    if i_visited:
+        print(dist[i])
     else:
-        dist[min_v] = min_dist
-
-for i_dist in dist[1:]:
-    print(i_dist)
+        print(-1)
