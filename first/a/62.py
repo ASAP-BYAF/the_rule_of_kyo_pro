@@ -1,3 +1,8 @@
+import sys
+
+# 再帰呼び出しの深さの上限を 120000 に設定
+sys.setrecursionlimit(120000)
+
 def dfs_func(g, v, v_connected):
     """ グラフ g において頂点 v からみて連結かどうかを判定します。
     Args:
@@ -6,14 +11,14 @@ def dfs_func(g, v, v_connected):
         v_connected (list[int]): 現時点で連結な頂点の集合を返します。
 
     Returns:
-        v_conneted (list[int]): g の v から見た連結成分のリスト
+        None: g の v から見た時に到達できるかの論理値のリスト 
+            v_conneted (list[logical]) を更新します。
     """
     
-    if g[v]:
-        for i_adj in g[v]:
-            if not i_adj in v_connected:
-                v_connected.append(i_adj)
-                dfs_func(g, i_adj, v_connected)
+    v_connected[v-1] = True
+    for i_adj in g[v]:
+        if not v_connected[i_adj-1]:
+            dfs_func(g, i_adj, v_connected)
 
 n,m = map(int, input().split())
 graph = [set() for _ in range(n+1)]
@@ -22,10 +27,10 @@ for _ in range(m):
     graph[a].add(b)
     graph[b].add(a)
 
-connected_component = []
-dfs_func(graph, 1, connected_component)
+visited = [False for _ in range(n)]
+dfs_func(graph, 1, visited)
     
-if len(connected_component) == n:
+if all(visited):
     print("The graph is connected.")
 else:
     print("The graph is not connected.")
